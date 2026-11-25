@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perfil · Hñähñu</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#16222a;--fg:#e8eef2;--mut:#a3afb6;--line:#36464f;--card:#1e2d36;--green:#58cc02;--gd:#58a700;--blue:#1cb0f6;--orange:#ff9600;--red:#ff4b4b;--gold:#ffc800;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Nunito","Segoe UI",system-ui,sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:680px;padding:16px 16px 40px}
+.hero{display:flex;gap:16px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:20px}
+.av{position:relative;width:96px;height:96px;border-radius:50%;background:var(--card);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:3.2rem;cursor:pointer;flex:none;overflow:visible}
+.av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.av .cam{position:absolute;right:-4px;bottom:-4px;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-size:1rem;display:flex;align-items:center;justify-content:center;border:3px solid var(--bg)}
+.av.sub{opacity:.5;pointer-events:none}
+.picker .sep{flex-basis:100%;height:0}
+.picker .foto{font:inherit;font-size:.95rem;font-weight:800;color:var(--fg)}
+.picker .foto.del{color:var(--red)}
+.hero input{font:inherit;font-size:1.6rem;font-weight:800;color:var(--fg);background:transparent;border:2px solid transparent;border-radius:10px;padding:2px 6px;width:100%}
+.hero input:hover,.hero input:focus{border-color:var(--line);outline:0}
+.mut{color:var(--mut);font-size:.9rem;padding-left:6px}
+.picker{display:none;flex-wrap:wrap;gap:8px;margin:14px 0;padding:12px;background:var(--card);border-radius:16px}
+.picker.on{display:flex}
+.picker button{font-size:1.8rem;background:var(--bg);border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;padding:6px 10px;cursor:pointer}
+h2{font-size:1.2rem;margin:26px 0 10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.st{border:2px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.st span{font-size:1.7rem}
+.st b{display:block;font-size:1.3rem}
+.st small{color:var(--mut)}
+.card{border:2px solid var(--line);border-radius:16px;padding:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar{height:16px;background:var(--line);border-radius:8px;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;background:var(--green);border-radius:8px;transition:width .4s}
+.goal i{background:var(--orange)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{font:inherit;font-weight:800;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:6px 14px;cursor:pointer}
+.chip.on{border-color:var(--blue);color:var(--blue)}
+.week{display:flex;gap:8px;align-items:flex-end;height:110px}
+.week div{flex:1;text-align:center;font-size:.75rem;color:var(--mut)}
+.week i{display:block;background:var(--blue);border-radius:6px 6px 0 0;min-height:4px;margin-bottom:4px}
+.btn{font:inherit;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--green);border:0;border-bottom:4px solid var(--gd);border-radius:14px;padding:12px 18px;cursor:pointer}
+.btn.sec{color:var(--mut);background:var(--bg);border:2px solid var(--line);border-bottom-width:4px}
+.ach{display:grid;gap:10px}
+.a{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:16px;padding:10px 14px}
+.a span{font-size:2rem}
+.a.lock{opacity:.45;filter:grayscale(1)}
+.a b{display:block}
+.a small{color:var(--mut)}
+.btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.top a{color:var(--mut);font-weight:800;text-decoration:none;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:6px 12px}
+a.btn{text-decoration:none;display:inline-block}
+#aviso{display:none;margin:12px 0;padding:12px 14px;border-radius:12px;font-weight:800;background:#40201f;color:var(--red)}
+#aviso.on{display:block}
+.ach .a.click{cursor:pointer}
+</style>
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+<body class="con-menu">
+    <!-- Menú lateral (igual al de inicio.html) -->
+    <nav class="sidebar1">
+        <div class="logo"><a href="inicio.html"><img src="../img/logo.png" alt="Inicio"></a></div>
+        <ul class="menu-links1">
+            <li><a href="Vocales.html">Vocales</a></li>
+            <li><a href="cons.html">Consonantes</a></li>
+            <li><a href="men_lecc.html">Aprender</a></li>
+            <li><a href="Perfil.html" class="actual">Perfil</a></li>
+            <li><a href="juegos.html">Juegos</a></li>
+            <li><a href="../api/logout.php">Cerrar Sesion</a></li>
+        </ul>
+    </nav>
+
+<div id="app">
+ <div class="top"><a href="men_lecc.html">← Aprender</a><a href="inicio.html">Inicio</a></div>
+ <div id="aviso"></div>
+ <div class="hero">
+  <div class="av" id="av" title="Cambiar foto o avatar"></div>
+  <input type="file" id="fi" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+  <div style="flex:1;min-width:0">
+   <input id="nm" maxlength="30" aria-label="Nombre">
+   <div class="mut" id="un"></div>
+   <div class="mut" id="em"></div>
+   <div class="mut" id="un2"></div>
+   <div class="mut" id="un3"></div>
+  </div>
+ </div>
+ <div class="picker" id="pk"></div>
+
+ <h2>Estadísticas</h2>
+ <div class="stats">
+  <div class="st"><span>🔥</span><div><b id="s1">0</b><small>Días de racha</small></div></div>
+  <div class="st"><span>⚡</span><div><b id="s2">0</b><small>XP totales</small></div></div>
+  <div class="st"><span>🏅</span><div><b id="s3">0</b><small>Logros</small></div></div>
+  <div class="st"><span>📅</span><div><b id="s4">0</b><small>Días practicados</small></div></div>
+ </div>
+
+ <h2>Curso actual</h2>
+ <div class="card">
+  <div class="row"><b>🦎 Hñähñu (otomí)</b><span class="mut" id="lv"></span></div>
+  <div class="bar"><i id="cb" style="width:0"></i></div>
+  <small class="mut" id="ct"></small>
+  <div class="bar"><i id="pb" style="width:0;background:var(--blue)"></i></div>
+  <small class="mut" id="pt"></small>
+ </div>
+
+ <h2>Lecciones</h2>
+ <div class="card"><div class="chips" id="ls" style="margin-top:0"></div></div>
+
+ <h2>Actividad de la semana</h2>
+ <div class="card"><div class="week" id="wk"></div></div>
+
+ <div class="btns">
+  <a class="btn" href="men_lecc.html">Practicar</a>
+  <a class="btn sec" href="../api/logout.php">Cerrar sesión</a>
+ </div>
+
+ <h2>Logros</h2>
+ <div class="ach" id="ac"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const AV=["🦎","🦅","🌵","🐢","🦋","🐍","🌽","🐇"];
+const LV=[0,50,120,250,450,700,1000,1500];
+let D=null;
+
+function aviso(t){const a=$("aviso");a.textContent=t;a.classList.add("on");setTimeout(()=>a.classList.remove("on"),4000)}
+async function api(cuerpo){
+ try{
+  const r=await fetch("../api/perfil.php",{method:cuerpo?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:cuerpo?JSON.stringify(cuerpo):undefined});
+  if(r.status===401){location.href="index.html";return null}
+  const d=await r.json();
+  if(!d.exito){aviso(d.mensaje||"Ocurrió un error");return null}
+  return d;
+ }catch(e){aviso("Sin conexión con el servidor. ¿Está encendido XAMPP?");return null}
+}
+const level=()=>{let l=0;const xp=D.progreso.experiencia;while(l+1<LV.length&&xp>=LV[l+1])l++;return l};
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const hoyXp=()=>D.actividad[D.hoy]||0;
+
+function logros(){
+ const p=D.progreso,u=D.usuario;
+ return [
+  ["🌱","Primer paso","Gana tu primer XP",p.experiencia>=10],
+  ["📖","Primera lección","Termina una lección",D.completadas.length>=1],
+  ["🔥","Racha de 3","Practica 3 días seguidos",p.racha>=3],
+  ["🔥","Racha de 7","Practica 7 días seguidos",p.racha>=7],
+  ["⚡","100 XP","Llega a 100 XP",p.experiencia>=100],
+  ["💎","500 XP","Llega a 500 XP",p.experiencia>=500],
+  ["🎓","Curso completo","Termina todas las lecciones",D.completadas.length>=D.total_lecciones],
+  ["🎨","Mi estilo","Toca aquí y sube una foto o elige un avatar",u.avatar>0||!!u.foto]
+ ];
+}
+
+function render(){
+ const u=D.usuario,p=D.progreso;
+ const av=$("av");av.innerHTML="";
+ if(u.foto){const im=document.createElement("img");im.alt="Foto de perfil de "+u.nombre;im.src="../"+u.foto;
+  im.onerror=()=>{u.foto=null;render()};av.appendChild(im)}   // si el archivo ya no existe, vuelve al avatar
+ else av.appendChild(document.createTextNode(AV[u.avatar]||AV[0]));
+ const cam=document.createElement("span");cam.className="cam";cam.textContent="📷";av.appendChild(cam);
+ $("qf").style.display=u.foto?"":"none";
+ if(document.activeElement!==$("nm"))$("nm").value=u.nombre;
+ $("un").textContent="@"+u.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
+ $("em").textContent=u.email+" · "+u.pais;
+ const f=new Date(u.fecha_registro.replace(" ","T"));
+ $("un2").textContent=isNaN(f)?"":"Se unió en "+f.toLocaleDateString("es-MX",{month:"long",year:"numeric"});
+ const fn=u.fecha_nac?new Date(u.fecha_nac+"T00:00:00"):null;
+ if(fn&&!isNaN(fn)){const h=new Date();let ed=h.getFullYear()-fn.getFullYear();
+  if(h.getMonth()<fn.getMonth()||(h.getMonth()===fn.getMonth()&&h.getDate()<fn.getDate()))ed--;
+  $("un3").textContent="Nació el "+fn.toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})+" · "+ed+" años"}
+ else $("un3").textContent="";
+
+ const L=logros(),n=L.filter(a=>a[3]).length,t=hoyXp(),l=level();
+ $("s1").textContent=p.racha;$("s2").textContent=p.experiencia;$("s3").textContent=n;$("s4").textContent=D.dias_practicados;
+
+ const lo=LV[l],hi=LV[l+1];
+ $("lv").textContent="Nivel "+(l+1);
+ $("cb").style.width=hi?Math.min(100,(p.experiencia-lo)/(hi-lo)*100)+"%":"100%";
+ $("ct").textContent=hi?(hi-p.experiencia)+" XP para el nivel "+(l+2):"¡Nivel máximo!";
+ $("pb").style.width=p.porcentaje+"%";
+ $("pt").textContent=D.completadas.length+" de "+D.total_lecciones+" lecciones · "+p.porcentaje+"% del curso";
+
+ // Lecciones: ✅ las que ya terminó
+ const NL={vocales:["🅰️","Vocales"],alfabeto:["🔤","Consonantes"],colores:["🎨","Colores"],frutas:["🍊","Frutas"],numeros:["🔢","Números"],saludos:["👋","Saludos"],familia:["👪","Familia"],animales:["🦎","Animales"]};
+ $("ls").innerHTML="";
+ Object.keys(NL).forEach(id=>{const ok=D.completadas.includes(id),c=document.createElement("span");c.className="chip"+(ok?" on":"");c.textContent=(ok?"✅ ":NL[id][0]+" ")+NL[id][1];$("ls").appendChild(c)});
+
+ // Semana: 7 días terminando en "hoy" (fecha del servidor)
+ const [Y,M,Dd]=D.hoy.split("-").map(Number),N=["D","L","M","M","J","V","S"],dias=[];
+ for(let k=6;k>=0;k--){const d=new Date(Y,M-1,Dd-k);dias.push([N[d.getDay()],D.actividad[ymd(d)]||0])}
+ const mx=Math.max(1,...dias.map(x=>x[1]));
+ $("wk").innerHTML=dias.map(x=>'<div><i style="height:'+Math.max(4,x[1]/mx*80)+'px"></i>'+x[0]+'</div>').join("");
+
+ $("ac").innerHTML="";
+ L.forEach(a=>{
+  const d=document.createElement("div");d.className="a"+(a[3]?"":" lock")+(a[1]==="Mi estilo"?" click":"");
+  d.innerHTML='<span></span><div><b></b><small></small></div>';
+  d.querySelector("span").textContent=a[0];d.querySelector("b").textContent=a[1];d.querySelector("small").textContent=a[2];
+  if(a[1]==="Mi estilo")d.onclick=()=>{$("pk").classList.add("on");window.scrollTo({top:0,behavior:"smooth"})};
+  $("ac").appendChild(d);
+ });
+}
+
+$("av").onclick=()=>$("pk").classList.toggle("on");
+AV.forEach((e,k)=>{const b=document.createElement("button");b.textContent=e;
+ b.onclick=async()=>{if(await api({avatar:k})){D.usuario.avatar=k;$("pk").classList.remove("on");render();if(D.usuario.foto)aviso("Tu foto sigue activa; toca «Quitar foto» para ver el avatar.")}};$("pk").appendChild(b)});
+
+// ---- Foto de perfil ----
+const bSub=document.createElement("button");bSub.className="foto";bSub.textContent="📷 Subir foto";
+const bQui=document.createElement("button");bQui.className="foto del";bQui.id="qf";bQui.textContent="🗑 Quitar foto";
+const sep=document.createElement("span");sep.className="sep";
+$("pk").append(sep,bSub,bQui);
+bSub.onclick=()=>$("fi").click();
+
+// Reduce la imagen en el navegador (cuadrada, 400 px, JPG): sube rápido y no choca con el límite de tamaño de PHP
+function reducir(archivo){
+ return new Promise((ok,fallo)=>{
+  const url=URL.createObjectURL(archivo),im=new Image();
+  im.onload=()=>{
+   const L=Math.min(im.naturalWidth,im.naturalHeight),T=Math.min(400,L),c=document.createElement("canvas");
+   c.width=c.height=T;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,T,T);
+   x.drawImage(im,(im.naturalWidth-L)/2,(im.naturalHeight-L)/2,L,L,0,0,T,T);
+   URL.revokeObjectURL(url);
+   c.toBlob(b=>b?ok(b):fallo(),"image/jpeg",.88);
+  };
+  im.onerror=()=>{URL.revokeObjectURL(url);fallo()};
+  im.src=url;
+ });
+}
+$("fi").onchange=async()=>{
+ const a=$("fi").files[0];$("fi").value="";
+ if(!a)return;
+ if(!/^image\//.test(a.type)){aviso("Elige un archivo de imagen (JPG, PNG, WEBP o GIF)");return}
+ $("av").classList.add("sub");
+ try{
+  let blob;try{blob=await reducir(a)}catch(e){blob=a}   // si el navegador no puede leerla, la manda tal cual y el servidor decide
+  const fd=new FormData();fd.append("foto",blob,"perfil.jpg");
+  const r=await fetch("../api/subir_foto.php",{method:"POST",credentials:"same-origin",body:fd});
+  if(r.status===401){location.href="index.html";return}
+  let d;try{d=await r.json()}catch(e){d={exito:false,mensaje:"El servidor no respondió como se esperaba"}}
+  if(!d.exito)aviso(d.mensaje||"No se pudo subir la foto");
+  else{D.usuario.foto=d.foto;$("pk").classList.remove("on");render()}
+ }catch(e){aviso("Sin conexión con el servidor. ¿Está encendido XAMPP?")}
+ $("av").classList.remove("sub");
+};
+bQui.onclick=async()=>{
+ try{
+  const r=await fetch("../api/eliminar_foto.php",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"});
+  const d=await r.json();
+  if(!d.exito){aviso(d.mensaje||"No se pudo quitar la foto");return}
+  D.usuario.foto=null;$("pk").classList.remove("on");render();
+ }catch(e){aviso("Sin conexión con el servidor. ¿Está encendido XAMPP?")}
+};
+
+async function guardarNombre(){
+ const v=$("nm").value.trim();
+ if(!v||v===D.usuario.nombre){$("nm").value=D.usuario.nombre;return}
+ if(await api({nombre:v})){D.usuario.nombre=v;render()}else $("nm").value=D.usuario.nombre;
+}
+$("nm").onblur=guardarNombre;
+$("nm").onkeydown=e=>{if(e.key==="Enter")$("nm").blur()};
+
+api().then(d=>{if(d){D=d;render()}});
+// Si vuelve con el botón «atrás», recarga los datos para ver el XP recién ganado
+window.addEventListener("pageshow",e=>{if(e.persisted)api().then(d=>{if(d){D=d;render()}})});
+</script>
+</body>
+</html>

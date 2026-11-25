@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Otomí - Familia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo1.css">
+</head>
+
+<body>
+    <div class="top">
+        <button class="menu-btn" onclick="location.href='men_lecc.html'" aria-label="Volver al menú">🏠 MENÚ</button>
+        <div class="progress">
+            <div class="fill" id="fill"></div>
+        </div>
+        <div>❤️ <span id="lives">5</span></div>
+    </div>
+    <div class="wrap" id="app"></div>
+    <div class="btn"><button id="skip">SALTAR (−1 ❤️)</button><button id="check" disabled>COMPROBAR</button></div>
+
+    <script>const CATEGORIA = 'familia';</script>
+    <script src="vocab.js"></script>
+    <script src="comun.js"></script>
+    <script src="progreso.js"></script>
+    <script src="leccion.js"></script>
+</body>
+
+</html>

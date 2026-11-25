@@ -1,0 +1,78 @@
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0d1b2;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+    h3 {
+        color: #ff970f;
+        font-size: 32px;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+    h1 {
+        color: #583008;
+        font-size: 32px;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+    .contenedor {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .card {
+        background: white;
+        border: 2px solid #333;
+        border-radius: 16px;
+        width: 180px;
+        padding: 15px;
+        box-shadow: 4px 4px 0px #333;
+    }
+    .card img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        background: #f2f2f2;
+        border-radius: 10px;
+    }
+    .card button {
+        margin-top: 10px;
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        background: #f0e76e;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .card button:hover {
+        background: #3698f5;
+    }
+    .fila-botones {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 16px;;
+    }
+    .fila-botones button:hover {
+        background: #f53636;
+    }
+    .btn_izquierda {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .btn_derecha {
+        background: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }

@@ -1,0 +1,86 @@
+/* Juegos: se apoya en estilo1.css (barra superior, tarjetas, botones, confeti) y agrega lo propio */
+.wrap h1 { font-size: 26px }
+.hero-juegos { display: flex; align-items: center; gap: 14px; margin-bottom: 18px }
+.hero-juegos img { width: 90px; height: 90px; object-fit: contain }
+.hero-juegos h1 { margin: 0 0 4px }
+.hero-juegos p { color: #a3afb6; font-weight: 800; font-size: 15px }
+.sub { font-size: 18px; font-weight: 800; margin: 18px 0 10px; color: #e8eef2 }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px }
+.chip { background: #16222a; color: #a3afb6; border: 2px solid #36464f; border-bottom: 4px solid #36464f; border-radius: 12px; padding: 8px 14px; font-size: 16px; font-weight: 800; cursor: pointer }
+.chip:active { transform: translateY(2px); border-bottom-width: 2px }
+.chip.sel { background: #17394a; border-color: #1cb0f6; color: #1cb0f6 }
+
+.grid { display: grid; gap: 10px }
+.g2 { grid-template-columns: 1fr 1fr }
+.g3 { grid-template-columns: repeat(3, 1fr) }
+.g4 { grid-template-columns: repeat(4, 1fr) }
+.g8 { grid-template-columns: repeat(8, 1fr); gap: 4px }
+.grid .card { margin: 0 }
+
+.juego { padding: 22px 8px; font-size: 42px; line-height: 1.1; border-bottom-width: 5px; user-select: none }
+.juego b { display: block; font-size: 17px; margin-top: 8px; color: #e8eef2 }
+.juego:active { transform: translateY(2px); border-bottom-width: 3px }
+
+.card.ok { background: #1e3b14; border-color: #58cc02; color: #89e219; pointer-events: none }
+.card.mal { background: #40201f; border-color: #ff4b4b; color: #ff4b4b }
+
+.cartaM { min-height: 84px; font-size: 15px; padding: 6px; display: flex; align-items: center; justify-content: center; word-break: break-word; user-select: none }
+.cartaM.oculta { background: #1cb0f6; border-color: #1899d6; color: #fff; font-size: 30px }
+
+.celda { padding: 0; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 16px; border-radius: 10px; user-select: none }
+.celda.s { background: #58cc02; color: #fff; border-color: #58a700 }
+.celda.f { background: #1e3b14; border-color: #58cc02; color: #89e219; pointer-events: none }
+
+.emoji-grande { font-size: 84px; text-align: center; line-height: 1.1; margin: 6px 0 }
+.palabra { font-size: 30px; font-weight: 800; letter-spacing: 6px; text-align: center; margin: 10px 0 }
+.teclado { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px }
+.tecla { min-width: 38px; padding: 8px; background: #16222a; color: #e8eef2; border: 2px solid #36464f; border-bottom: 4px solid #36464f; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer }
+.tecla:disabled { opacity: .35; cursor: default }
+.tecla.bien { background: #1e3b14; border-color: #58cc02 }
+.tecla.mala { background: #40201f; border-color: #ff4b4b }
+
+input.texto { width: 100%; padding: 14px; border: 2px solid #36464f; border-radius: 12px; font-size: 20px; text-align: center; outline: none; color: #e8eef2 }
+input.texto:focus { border-color: #1cb0f6 }
+.centro { text-align: center }
+.audio-btn.grande { font-size: 22px; padding: 14px 26px; display: block; margin: 8px auto 22px }
+#msg { font-weight: 800; margin-top: 16px; text-align: center; color: #a3afb6; line-height: 1.8 }
+#estado { font-weight: 800; white-space: nowrap }
+.hidden { display: none !important }
+
+/* ---------- Une las parejas (colores en otomí) ---------- */
+.nivel-une { color: #ff4b4b; font-weight: 800; margin-bottom: 10px }
+.une-tablero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr); gap: 8px; align-items: stretch }
+.une-lado { display: flex; flex-direction: column; justify-content: space-around; gap: 8px }
+.une-centro { display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 12px; padding: 8px }
+.ucolor { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #cfd8dc; border-bottom-width: 4px; cursor: grab; padding: 0 }
+.ucolor.sel { outline: 4px solid #1cb0f6; outline-offset: 2px }
+.ucolor:disabled { opacity: .25; cursor: default }
+.upal { display: flex; flex-direction: column; background: #16222a; color: #e8eef2; border: 2px solid #36464f; border-bottom-width: 4px; border-radius: 14px; overflow: hidden; padding: 0; font-weight: 800; font-size: 14px; line-height: 28px; cursor: pointer; word-break: break-word }
+.upal:active { transform: translateY(2px) }
+.upal.ok { background: #1e3b14; border-color: #58cc02; color: #89e219; cursor: default }
+.upal.mal { background: #40201f; border-color: #ff4b4b; color: #ff4b4b }
+.ucasilla { display: block; height: 40px; background: #1e2d36; border-bottom: 2px solid #36464f }
+@media (max-width: 420px) { .ucolor { width: 40px; height: 40px } .upal { font-size: 12px } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .hero-juegos img { width: 70px; height: 70px }
+    .wrap h1 { font-size: 22px }
+    .juego { font-size: 36px; padding: 18px 6px }
+    .juego b { font-size: 15px }
+    .g4 { gap: 6px }
+    .cartaM { min-height: 70px; font-size: 13px; padding: 4px }
+    .g8 { gap: 3px }
+    .celda { height: 32px; font-size: 14px; border-radius: 8px }
+    .palabra { font-size: 24px; letter-spacing: 4px }
+    .teclado { gap: 4px }
+    .tecla { min-width: 32px; padding: 7px 4px; font-size: 15px }
+    .emoji-grande { font-size: 64px }
+}
+@media (min-width: 700px) { .celda { height: 44px; font-size: 18px } .cartaM { min-height: 100px; font-size: 17px } }
+
+/* Con el menú lateral, la barra inferior fija empieza donde termina el menú */
+@media (min-width: 861px) {
+    body.con-menu #barra { left: 240px; padding-inline: max(16px, calc((100% - 240px - var(--ancho)) / 2)) }
+}

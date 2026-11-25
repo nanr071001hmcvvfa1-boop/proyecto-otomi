@@ -1,0 +1,176 @@
+:root { color-scheme: dark }
+/* =========================================================
+   Unidad 1 – mismo diseño que las lecciones (estilo1.css):
+   fondo blanco, Nunito, verde #58cc02, azul #1cb0f6
+   ========================================================= */
+body {
+    margin: 0;
+    font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+    background: #16222a;
+    color: #e8eef2;
+}
+
+section {
+    min-height: 100vh;
+    padding: 30px 16px 120px;
+    box-sizing: border-box;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+section h3 {
+    font-size: 16px;
+    color: #1cb0f6;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+section h1 {
+    font-size: 26px;
+    margin: 6px 0 20px;
+}
+
+/* CONTENEDOR DE TARJETAS */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* TARJETAS (igual que .card de las lecciones) */
+.card {
+    width: 200px;
+    background: #16222a;
+    border: 2px solid #36464f;
+    border-bottom-width: 4px;
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    color: #e8eef2;
+}
+
+.card:active {
+    transform: translateY(2px);
+}
+
+.card.seleccionada {
+    background: #17394a;
+    border-color: #1cb0f6;
+    color: #1cb0f6;
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.card h3 {
+    margin: 12px 0 4px;
+    color: #e8eef2;
+    font-size: 20px;
+    text-transform: none;
+    letter-spacing: 0;
+    border-radius: 8px;
+}
+
+.card.seleccionada h3 {
+    color: #1cb0f6;
+}
+
+.card p {
+    margin: 0;
+    color: #a3afb6;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.contenido {
+    padding-top: 10px;
+}
+
+.contenido h3 {
+    margin: 10px 0 5px;
+}
+
+/* BOTONES: barra fija abajo, como en las demás lecciones */
+.botones {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    padding: 16px;
+    background: #16222a;
+    border-top: 2px solid #36464f;
+    z-index: 50;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.comprobar {
+    flex: 2;
+    background: #58cc02;
+    color: #fff;
+    border: none;
+    border-bottom: 4px solid #58a700;
+    padding: 14px;
+    border-radius: 16px;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.saltar {
+    flex: 1;
+    background: #16222a;
+    color: #ff4b4b;
+    border: 2px solid #36464f;
+    border-bottom: 4px solid #36464f;
+    padding: 14px 8px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.comprobar:active,
+.saltar:active {
+    transform: translateY(2px);
+}
+
+/* RESULTADOS */
+.resultado {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 20px;
+}
+
+/* LECCIONES 2 A 6 OCULTAS AL INICIO */
+#leccion2,
+#leccion3,
+#leccion4,
+#leccion5,
+#leccion6 {
+    display: none;
+}
+
+/* ---------- Responsive ---------- */
+*, *::before, *::after { box-sizing: border-box }
+.botones { padding-inline: max(16px, calc((100% - 720px) / 2)); padding-bottom: max(16px, env(safe-area-inset-bottom)) }
+@media (max-width: 520px) {
+    section { padding: 20px 12px 110px }
+    section h1 { font-size: 22px }
+    .container { gap: 10px }
+    .card { width: calc(50% - 5px); padding: 10px }
+    .card img { height: 120px }
+    .card h3 { font-size: 17px }
+    .comprobar { font-size: 17px }
+}

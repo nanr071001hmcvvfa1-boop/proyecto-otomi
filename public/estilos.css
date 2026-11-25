@@ -1,0 +1,596 @@
+/* =========================================================
+   San Nicolás Peralta – Hoja de estilos
+   Mismo diseño que las lecciones y los juegos (estilo1.css):
+   fondo blanco, verde #58cc02, azul #1cb0f6, bordes redondeados
+   Tipografía: Nunito (400 a 800)
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+:root {
+    --tinta: #e8eef2;
+    --tinta-suave: #17394a;
+    --lago: #1cb0f6;
+    --lago-oscuro: #1899d6;
+    --cempasuchil: #58cc02;
+    --fondo: #16222a;
+    --superficie: #16222a;
+    --texto: #e8eef2;
+    --texto-suave: #a3afb6;
+    --linea: #36464f;
+    --radio: 16px;
+    --ancho-menu: 240px;
+    --sombra: none;
+    --sombra-alta: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--texto);
+    background: var(--fondo);
+}
+
+/* ---------- Menú lateral principal ---------- */
+.sidebar1 {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--ancho-menu);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 18px;
+    background: #16222a;
+    color: var(--texto);
+    border-right: 2px solid var(--linea);
+    z-index: 20;
+}
+
+.logo {
+    text-align: center;
+    padding-bottom: 22px;
+    margin-bottom: 22px;
+    border-bottom: 2px solid var(--linea);
+}
+
+.logo img {
+    max-width: 120px;
+    height: auto;
+}
+
+.menu-links1 {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.menu-links1 a {
+    display: block;
+    padding: 11px 16px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--texto-suave);
+    text-decoration: none;
+    font-weight: 800;
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.menu-links1 a:hover {
+    background: var(--tinta-suave);
+    border-color: var(--lago);
+    color: var(--lago);
+}
+
+.menu-links1 li:last-child {
+    margin-top: auto;
+}
+
+.menu-links1 li:last-child a {
+    border: 2px solid var(--linea);
+    border-bottom-width: 4px;
+    color: #ff4b4b;
+    text-align: center;
+}
+
+.menu-links1 li:last-child a:hover {
+    background: #40201f;
+    border-color: #ff4b4b;
+    color: #ff4b4b;
+}
+
+/* ---------- Contenido principal ---------- */
+.main-content {
+    margin-left: var(--ancho-menu);
+    min-height: 100vh;
+}
+
+/* ---------- Barra de secciones ---------- */
+.sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--superficie);
+    border-bottom: 2px solid var(--linea);
+}
+
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 32px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+.sidebar a {
+    display: block;
+    padding: 18px 18px 15px;
+    color: var(--texto-suave);
+    text-decoration: none;
+    font-weight: 800;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+}
+
+.sidebar a:hover {
+    color: var(--lago);
+    border-bottom-color: var(--lago);
+}
+
+.sidebar a:focus-visible,
+.menu-links1 a:focus-visible {
+    outline: 3px solid var(--cempasuchil);
+    outline-offset: -3px;
+}
+
+/* ---------- Secciones ---------- */
+.main-content section {
+    display: none;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 44px 32px 72px;
+}
+
+.main-content section.activa {
+    display: block;
+}
+
+section>br {
+    display: none;
+}
+
+h1 {
+    margin: 0 0 28px;
+    padding-left: 18px;
+    border-left: 6px solid var(--cempasuchil);
+    font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--tinta);
+}
+
+/* Inicio */
+#inicio {
+    padding-top: 64px;
+}
+
+#inicio h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    max-width: 18ch;
+}
+
+#inicio p {
+    max-width: 62ch;
+    padding: 28px 30px;
+    margin: 0;
+    background: var(--superficie);
+    border-radius: var(--radio);
+    border: 2px solid var(--linea);
+    border-bottom-width: 4px;
+    font-size: 1.12rem;
+    color: var(--texto);
+}
+
+/* ---------- Tarjetas ---------- */
+.Contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    align-items: start;
+}
+
+.card {
+    background: var(--superficie);
+    border-radius: var(--radio);
+    padding: 28px;
+    border: 2px solid var(--linea);
+    border-bottom-width: 4px;
+    transition: border-color .2s, transform .2s;
+}
+
+.card:hover {
+    border-color: var(--lago);
+}
+
+.card>br {
+    display: none;
+}
+
+.card h4 {
+    margin: 0 0 14px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--lago-oscuro);
+}
+
+.card h5 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texto-suave);
+}
+
+.card p {
+    margin: 0;
+}
+
+.card ul {
+    margin: 0 0 20px;
+    padding-left: 20px;
+}
+
+.card li {
+    margin-bottom: 10px;
+}
+
+.card li::marker {
+    color: var(--cempasuchil);
+}
+
+.card strong {
+    color: var(--tinta);
+}
+
+/* Imágenes (se sobreponen a los estilos en línea del HTML) */
+.card img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 280px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Tarjeta de vestimenta */
+.card[style] {
+    width: 100% !important;
+    max-width: 560px;
+}
+
+.card[style] img {
+    max-height: none;
+}
+
+/* ---------- Tarjeta que gira (Huehuenches) ---------- */
+.card:has(.card-inner) {
+    padding: 0;
+    height: 360px;
+    background: none;
+    border: none;
+    perspective: 1100px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .7s cubic-bezier(.4, .2, .2, 1);
+    border-radius: var(--radio);
+    box-shadow: 0 4px 0 var(--linea);
+}
+
+.card:hover .card-inner,
+.card:focus-within .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radio);
+    border: 2px solid var(--linea);
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.card-front img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none;
+    border-radius: 0;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    padding: 26px;
+    overflow-y: auto;
+    background: var(--lago);
+    border-color: var(--lago-oscuro);
+    color: #fff;
+}
+
+.card-back h4 {
+    color: #fff;
+}
+
+.card-back strong {
+    color: inherit;
+}
+
+.card-back p {
+    font-size: .98rem;
+    line-height: 1.6;
+}
+
+/* ---------- Adaptación a móvil ---------- */
+@media (max-width: 860px) {
+    .sidebar1 {
+        position: static;
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        overflow-x: auto;
+    }
+
+    .logo {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        flex-shrink: 0;
+    }
+
+    .logo img {
+        max-width: 48px;
+    }
+
+    .menu-links1 {
+        flex-direction: row;
+        gap: 4px;
+    }
+
+    .menu-links1 a {
+        padding: 8px 12px;
+        font-size: .92rem;
+        white-space: nowrap;
+    }
+
+    .menu-links1 li:last-child {
+        margin-top: 0;
+        margin-left: 6px;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar ul {
+        padding: 0 12px;
+    }
+
+    .main-content section {
+        padding: 32px 18px 56px;
+    }
+
+    .Contenedor {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .card-inner {
+        transition: none;
+    }
+}
+
+/* =========================================================
+   Sección Vestimenta: imagen a la izquierda y las dos
+   siluetas (hombre y mujer) una arriba de la otra a la derecha
+   ========================================================= */
+#vestimenta .Contenedor {
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 380px);
+    align-items: start;
+}
+
+/* La imagen grande ocupa las dos filas de la columna izquierda */
+.card4 {
+    grid-row: 1 / span 2;
+    background: var(--superficie);
+    padding: 16px;
+    border-radius: var(--radio);
+    border: 2px solid var(--linea);
+    border-bottom-width: 4px;
+}
+
+.card4 img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* En pantallas pequeñas todo va en una sola columna */
+@media (max-width: 860px) {
+    #vestimenta .Contenedor {
+        grid-template-columns: 1fr;
+    }
+
+    .card4 {
+        grid-row: auto;
+    }
+}
+
+/* =========================================================
+   Vestimenta compacta: todo cabe en pantalla sin deslizar
+   (solo en computadora; en celular se mantiene apilado)
+   ========================================================= */
+@media (min-width: 861px) {
+    #vestimenta {
+        padding-top: 28px;
+        padding-bottom: 20px;
+    }
+
+    #vestimenta h1 {
+        margin-bottom: 18px;
+        font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    }
+
+    #vestimenta .Contenedor {
+        grid-template-columns: minmax(0, 430px) minmax(260px, 330px);
+        justify-content: center;
+        gap: 20px;
+    }
+
+    /* Imagen grande: su alto se adapta a la pantalla */
+    .card4 {
+        padding: 10px;
+    }
+
+    .card4 img {
+        width: auto;
+        max-width: 100%;
+        max-height: calc(100vh - 235px);
+        margin: 0 auto;
+        object-fit: contain;
+    }
+
+    /* Siluetas: cada una mide la mitad del espacio disponible */
+    #vestimenta .card:has(.card-inner) {
+        height: clamp(190px, calc((100vh - 255px) / 2), 330px);
+    }
+
+    #vestimenta .card-back {
+        padding: 16px 18px;
+    }
+
+    #vestimenta .card-back h4 {
+        font-size: 1.05rem;
+        margin-bottom: 8px;
+    }
+
+    #vestimenta .card-back li,
+    #vestimenta .card-back p {
+        font-size: .88rem;
+        line-height: 1.45;
+        margin-bottom: 6px;
+    }
+}
+
+/* =========================================================
+   Inicio: información del pueblo otomí
+   ========================================================= */
+#inicio h2 {
+    margin: 48px 0 22px;
+    padding-left: 18px;
+    border-left: 6px solid var(--lago);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--tinta);
+}
+
+#inicio .Contenedor {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.card.info h4 {
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--linea);
+    font-size: 1.3rem;
+}
+
+.card.info ul {
+    margin-bottom: 0;
+}
+
+.card.info em {
+    color: var(--lago-oscuro);
+}
+
+/* La tarjeta de Cultura ocupa todo el ancho y reparte su lista en 2 columnas */
+.info-ancha {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 861px) {
+    .info-ancha ul {
+        columns: 2;
+        column-gap: 40px;
+    }
+
+    .info-ancha li {
+        break-inside: avoid;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE: celular, tableta y escritorio
+   ========================================================= */
+.main-content { overflow-x: clip }
+.Contenedor,
+#inicio .Contenedor { grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)) }
+
+/* La sección Vestimenta compacta solo cabe en pantallas anchas */
+@media (max-width: 1099px) {
+    #vestimenta .Contenedor { grid-template-columns: 1fr }
+    .card4 { grid-row: auto }
+    .card4 img { max-height: none }
+    #vestimenta .card:has(.card-inner) { height: 300px }
+}
+
+@media (max-width: 860px) {
+    /* el menú de arriba se acomoda en filas en lugar de esconder opciones */
+    .sidebar1 { flex-wrap: wrap; overflow-x: visible }
+    .menu-links1 { flex-wrap: wrap }
+    .menu-links1 li:last-child { margin-left: 0 }
+    .sidebar a { padding: 14px 12px 12px }
+}
+
+@media (max-width: 520px) {
+    .main-content section { padding: 24px 14px 48px }
+    #inicio { padding-top: 28px }
+    #inicio p { padding: 18px }
+    .card { padding: 18px }
+    .card:has(.card-inner) { height: 300px; padding: 0 }
+    .card-back { padding: 16px }
+    h1 { padding-left: 12px; border-left-width: 5px }
+    #inicio h2 { padding-left: 12px }
+}

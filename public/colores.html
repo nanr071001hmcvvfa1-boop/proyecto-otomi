@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Otomí - Colores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo1.css">
+
+</head>
+
+<body>
+    <div class="top">
+        <!-- NUEVO: regresar al menú -->
+        <button class="menu-btn" onclick="location.href='men_lecc.html'" aria-label="Volver al menú">🏠 MENÚ</button>
+        <div class="progress">
+            <div class="fill" id="fill"></div>
+        </div>
+        <div>❤️ <span id="lives">5</span></div>
+    </div>
+    <div class="wrap" id="app"></div>
+    <!-- NUEVO: botón SALTAR junto a COMPROBAR -->
+    <div class="btn"><button id="skip">SALTAR (−1 ❤️)</button><button id="check" disabled>COMPROBAR</button></div>
+
+    <script src="progreso.js"></script>
+    <script>
+        const VOCAB = [
+            { es: 'Morado', ot: ['kjuföi'], audio: 'kjuföi' }, { es: 'Verde', ot: ["k'apaxi", 'paxi'], audio: "k'apaxi" },
+            { es: 'Café', ot: ['boxo'], audio: 'boxo' }, { es: 'Blanco', ot: ["t'axi"], audio: "t'axi" },
+            { es: 'Gris', ot: ['gospi', 'mospi'], audio: 'gospi' }, { es: 'Pinto', ot: ['bindo'], audio: 'bindo' },
+            { es: 'Amarillo', ot: ["k'axti"], audio: "k'axti" }, { es: 'Azul', ot: ["k'angi"], audio: "k'angi" },
+            { es: 'Rosa', ot: ['roxa'], audio: 'rojcha' }, { es: 'Naranja', ot: ['naranxa'], audio: 'naranxa' },
+            { es: 'Negro', ot: ["bot'i"], audio: "bot'i" }, { es: 'Rojo', ot: ['theni', 'thengi'], audio: 'theni' }
+        ];
+        const MASCOT_IMG = '../img/f.png'
+        const FRASES = ['¡Muy bien!', '¡Excelente!', '¡Lo lograste!', '¡Increíble!', '¡Perfecto!', '¡Sigue así!', '¡Eres un crack!', '¡Qué bárbaro!', '¡Fantástico!', '¡Dá ra ma ts’ïnt’ï! 🌟'];
+        const FRASES_FINAL = ['¡Felicidades!', '¡Eres increíble!', '¡Lección completada!'];
+        const COLORES_CONFETI = ['#58cc02', '#1cb0f6', '#ffc800', '#ff4b4b', '#ce82ff', '#ff9600'];
+
+        // Devuelve el HTML de la muñeca (la imagen de MASCOT_IMG).
+        function mascotHTML() {
+            return `<div class="cele-mascot"><img src="${MASCOT_IMG}" alt="¡Felicidades!"></div>`;
+        }
+
+        // Crea n piezas de confeti con posición, color, duración y retraso al azar.
+        // Cada pieza se elimina del DOM a los 3.6 s para no acumular elementos.
+        function confetti(n = 30) {
+            for (let i = 0; i < n; i++) {
+                const c = document.createElement('div');
+                c.className = 'cele-confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.background = COLORES_CONFETI[Math.floor(Math.random() * COLORES_CONFETI.length)];
+                c.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+                c.style.animationDelay = (Math.random() * .4) + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 3600);
+            }
+        }
+
+        // Se llama al contestar BIEN: muestra la muñeca con una frase al azar en el centro,
+        // lanza 24 piezas de confeti y se quita sola a los 1.25 s.
+        function celebrate() {
+            const frase = FRASES[Math.floor(Math.random() * FRASES.length)];
+            const el = document.createElement('div');
+            el.className = 'cele-box';
+            el.innerHTML = mascotHTML() + `<div class="cele-bubble">${frase}</div>`;
+            document.body.appendChild(el);
+            confetti(24);
+            setTimeout(() => el.remove(), 1250);
+        }
+
+        // Se llama al TERMINAR la lección: muñeca bailando, frase final y botones.
+        function finaleAnimation() {
+            // Guarda XP, racha y lección completada en la base de datos (10 XP por pregunta)
+            // (el guardado se hace más abajo, cuando ya existe el aviso en pantalla)
+            // NUEVO: marca la lección como completada para el menú (inicio.html)
+            try {
+                const d = JSON.parse(localStorage.getItem('otomi_done') || '[]');
+                if (!d.includes('colores')) { d.push('colores'); localStorage.setItem('otomi_done', JSON.stringify(d)); }
+            } catch (e) { }
+
+            const app = document.getElementById('app');
+            const titulo = app.innerHTML; // conserva el título original
+            app.innerHTML = `<div class="cele-finale">${mascotHTML()}${titulo}
+            <p>${FRASES_FINAL[Math.floor(Math.random() * FRASES_FINAL.length)]}</p>
+            <p id="guardado" style="font-size:16px">Guardando tu progreso…</p>
+            <button class="cele-restart" onclick="location.reload()">PRACTICAR DE NUEVO</button>
+            <button class="cele-restart sec" onclick="location.href='men_lecc.html'">VOLVER AL MENÚ</button>
+            <button class="cele-restart sec" onclick="location.href='Perfil.html'">VER MI PERFIL</button></div>`;
+            guardarYMostrar('colores', puntos);   // suma el XP en la base de datos y lo muestra
+            confetti(60);
+            let rondas = 0;
+            const t = setInterval(() => { confetti(35); if (++rondas >= 4) clearInterval(t); }, 900);
+        }
+        // ===================== FIN DE LA ANIMACIÓN ==================
+
+        let lvl = 0, lives = 5, puntos = 0;   // puntos = XP ganado en esta lección
+        let list = [...VOCAB].sort(() => Math.random() - .5).slice(0, 8);
+        let currentAudio = null; // Para controlar el audio actual
+
+        // Función que reproduce el audio de la lección actual
+        function playColorAudio(nombreArchivo) {
+            // Detener audio anterior si existe
+            if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+
+            // Intenta reproducir archivo.ogg /.mp3
+            const audio = new Audio(`audios/${nombreArchivo}.ogg`);
+            currentAudio = audio;
+
+            audio.play().catch(() => {
+                // FALLBACK: Si falla, usa voz del navegador
+                console.log('No se encontró audios/' + nombreArchivo + '.ogg, usando voz sintética');
+                const msg = new SpeechSynthesisUtterance(nombreArchivo);
+                msg.lang = 'es-MX';
+                speechSynthesis.speak(msg);
+            });
+
+            // Si también falla el decode, intenta con.mp3
+            audio.addEventListener('error', () => {
+                const audioMp3 = new Audio(`audios/${nombreArchivo}.mp3`);
+                audioMp3.play().catch(() => { });
+            });
+        }
+
+        function render() {
+            document.getElementById('fill').style.width = (lvl / list.length * 100) + '%';
+            document.getElementById('lives').innerText = lives;
+
+            if (lvl >= list.length) {
+                document.getElementById('app').innerHTML = '<h1>¡Terminaste! 🎉<br>' + list.length + ' colores en otomí aprendidos</h1>';
+                finaleAnimation();
+                document.querySelector('.btn').style.display = 'none'; // oculta SALTAR y COMPROBAR
+                return;
+            }
+
+            const v = list[lvl];
+            document.getElementById('app').innerHTML = `
+            <h1>¿Cómo se dice <span style="color:#1cb0f6">${v.es}</span> en otomí?</h1>
+            <div class="scene">
+                <svg class="person" viewBox="0 0 110 130" xmlns="http://www.w3.org/2000/svg" aria-label="Mujer otomí">
+                    <!-- Blusa blanca bordada -->
+                    <path d="M10 130 Q10 84 55 84 Q100 84 100 130 Z" fill="#fff" stroke="#d9d9d9" stroke-width="2"/>
+                    <!-- Cuello -->
+                    <rect x="48" y="70" width="14" height="18" fill="#b87a48"/>
+                    <!-- Bordado del cuello (estilo tenango) -->
+                    <path d="M30 93 Q55 112 80 93" stroke="#e63946" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <circle cx="36" cy="98" r="4" fill="#ff5fa2"/><circle cx="46" cy="105" r="4" fill="#ff9600"/>
+                    <circle cx="55" cy="107" r="4" fill="#1cb0f6"/><circle cx="64" cy="105" r="4" fill="#ff9600"/>
+                    <circle cx="74" cy="98" r="4" fill="#ff5fa2"/>
+                    <circle cx="41" cy="102" r="2" fill="#58cc02"/><circle cx="69" cy="102" r="2" fill="#58cc02"/>
+                    <!-- Flores bordadas en la blusa -->
+                    <circle cx="28" cy="120" r="4" fill="#ff5fa2"/><circle cx="28" cy="120" r="1.5" fill="#ffd900"/>
+                    <path d="M22 124 Q25 118 28 124" fill="#58cc02"/>
+                    <circle cx="82" cy="120" r="4" fill="#ff9600"/><circle cx="82" cy="120" r="1.5" fill="#ffd900"/>
+                    <path d="M76 124 Q79 118 82 124" fill="#58cc02"/>
+                    <!-- Trenzas -->
+                    <path d="M30 46 Q18 82 30 114" stroke="#1f1712" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    <path d="M80 46 Q92 82 80 114" stroke="#1f1712" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    <rect x="25" y="110" width="10" height="9" rx="2" fill="#e63946"/>
+                    <rect x="75" y="110" width="10" height="9" rx="2" fill="#e63946"/>
+                    <!-- Rostro -->
+                    <circle cx="55" cy="48" r="27" fill="#c68b59"/>
+                    <!-- Cabello con raya al centro -->
+                    <path d="M27 48 Q27 15 55 15 Q83 15 83 48 Q72 28 55 28 Q38 28 27 48 Z" fill="#1f1712"/>
+                    <path d="M55 15 L55 28" stroke="#c68b59" stroke-width="1.5"/>
+                    <!-- Rasgos -->
+                    <circle cx="44" cy="52" r="3" fill="#1f1712"/><circle cx="66" cy="52" r="3" fill="#1f1712"/>
+                    <circle cx="38" cy="60" r="4" fill="#e8836b" opacity=".45"/><circle cx="72" cy="60" r="4" fill="#e8836b" opacity=".45"/>
+                    <path d="M46 64 Q55 72 64 64" stroke="#7a3b25" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </svg>
+                <div class="bubble">${v.es} <button class="audio-btn" id="playAudio" aria-label="Escuchar">🔊</button></div>
+            </div>
+            <div id="opts"></div>
+        `;
+
+            // Evento del botón de audio
+            document.getElementById('playAudio').onclick = () => playColorAudio(v.audio);
+
+            let opts = [v, ...VOCAB.filter(x => x.es != v.es).sort(() => Math.random() - .5).slice(0, 3)].sort(() => Math.random() - .5);
+            document.getElementById('opts').innerHTML = opts.map(o => `<div class="card" data-v="${o.ot[0]}" data-audio="${o.audio}">${o.ot[0]}</div>`).join('');
+
+            let sel = '';
+            document.querySelectorAll('.card').forEach(c => c.onclick = () => {
+                document.querySelectorAll('.card').forEach(x => x.classList.remove('sel'));
+                c.classList.add('sel');
+                sel = c.dataset.v;
+                playColorAudio(c.dataset.audio); // reproduce el audio del botón seleccionado
+                document.getElementById('check').disabled = false;
+            });
+
+            // NUEVO: SALTAR pregunta. Pierde una vida y la pregunta vuelve al final de la lista.
+            // No se puede saltar la última pregunta pendiente.
+            const skip = document.getElementById('skip');
+            skip.disabled = lvl >= list.length - 1;
+            skip.onclick = () => {
+                const fb = document.createElement('div');
+                fb.className = 'feedback bad';
+                fb.innerText = 'Saltaste · Era: ' + v.ot[0] + ' · −1 ❤️';
+                document.body.appendChild(fb);
+                skip.disabled = true;
+                document.getElementById('check').disabled = true;
+                lives--;
+                list.push(list.splice(lvl, 1)[0]);
+                setTimeout(() => {
+                    fb.remove();
+                    if (lives <= 0) { alert('Sin vidas'); lives = 5; lvl = 0; puntos = 0 }
+                    render();
+                }, 1200);
+            };
+
+            document.getElementById('check').onclick = () => {
+                let ok = v.ot.map(x => x.toLowerCase()).includes(sel.toLowerCase().trim());
+                let fb = document.createElement('div');
+                fb.className = 'feedback ' + (ok ? 'good' : 'bad');
+                fb.innerText = ok ? '¡Bien! Es ' + v.ot[0] : 'Era: ' + v.ot[0];
+                document.body.appendChild(fb);
+                if (ok) playColorAudio(v.audio); // Reproduce cuando acierta
+                if (ok) { celebrate(); puntos += 10; } // +10 XP por acierto; muñeca animada + frase + confeti al acertar
+                setTimeout(() => {
+                    fb.remove();
+                    if (ok) { lvl++ } else { lives--; if (lives <= 0) { alert('Sin vidas'); lives = 5; lvl = 0; puntos = 0 } }
+                    render();
+                }, 1200);
+                document.getElementById('check').disabled = true;
+                skip.disabled = true;
+            };
+        }
+        render();
+    </script>
+</body>
+
+</html>

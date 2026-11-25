@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Otomí - Juegos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo1.css">
+    <link rel="stylesheet" href="juegos.css">
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+
+<body class="con-menu">
+    <!-- Menú lateral (igual al de inicio.html) -->
+    <nav class="sidebar1">
+        <div class="logo"><a href="inicio.html"><img src="../img/logo.png" alt="Inicio"></a></div>
+        <ul class="menu-links1">
+            <li><a href="Vocales.html">Vocales</a></li>
+            <li><a href="cons.html">Consonantes</a></li>
+            <li><a href="men_lecc.html">Aprender</a></li>
+            <li><a href="Perfil.html">Perfil</a></li>
+            <li><a href="juegos.html" class="actual">Juegos</a></li>
+            <li><a href="../api/logout.php">Cerrar Sesion</a></li>
+        </ul>
+    </nav>
+
+    <div class="top">
+        <button class="menu-btn" id="atras" aria-label="Volver">🏠 MENÚ</button>
+        <div class="progress">
+            <div class="fill" id="fill"></div>
+        </div>
+        <div id="estado">⭐ 0 XP</div>
+    </div>
+
+    <!-- ============ INICIO DE JUEGOS ============ -->
+    <div class="wrap" id="home">
+        <div class="hero-juegos">
+            <img src="../img/f.png" alt="Mascota">
+            <div>
+                <h1>Juegos 🎮</h1>
+                <p>Practica otomí jugando</p>
+            </div>
+        </div>
+        <div class="sub">¿Con qué palabras quieres jugar?</div>
+        <div class="chips" id="chips"></div>
+        <div class="sub">Elige un juego</div>
+        <div class="grid g2" id="listaJuegos"></div>
+    </div>
+
+    <!-- ============ PANTALLA DE JUEGO ============ -->
+    <div class="wrap hidden" id="game">
+        <h1 id="titulo"></h1>
+        <div id="zona"></div>
+        <div id="msg"></div>
+    </div>
+
+    <div class="btn hidden" id="barra">
+        <button id="skip">← SALIR</button>
+        <button id="check" class="hidden">COMPROBAR</button>
+    </div>
+
+    <script src="vocab.js"></script>
+    <script src="comun.js"></script>
+    <script src="progreso.js"></script>
+    <script>
+        const $ = id => document.getElementById(id);
+        const letras = s => norm(s).replace(/ /g, '').toUpperCase();
+
+        const JUEGOS = {
+            memorama: { nombre: 'Memorama', icon: '🧠', rondas: 3, vidas: false, init: memorama },
+            sopa: { nombre: 'Sopa de letras', icon: '🔤', rondas: 3, vidas: false, init: sopa },
+            ahorcado: { nombre: 'Ahorcado', icon: '🎯', rondas: 5, vidas: false, init: ahorcado },
+            une: { nombre: 'Une las parejas', icon: '👉', rondas: 5, vidas: false, init: une },
+            audio: { nombre: 'Escucha y elige', icon: '🔊', rondas: 8, vidas: true, init: audio },
+            escribe: { nombre: 'Escribe en otomí', icon: '✍️', rondas: 8, vidas: true, init: escribe }
+        };
+
+        let cat = 'todas', juego = '', ronda = 0, RONDAS = 0, pts = 0, vidas = 5, ocupado = false, cola = [], xpTotal = null;
+
+        // ---------- palabras disponibles según la categoría elegida ----------
+        function pool(min = 4) {
+            let p = cat === 'todas' ? todasLasPalabras() : [...VOCAB_ALL[cat].items];
+            if (p.length < min) p = p.concat(shuffle(todasLasPalabras().filter(x => !p.includes(x))).slice(0, min - p.length));
+            return shuffle(p);
+        }
+        const cara = p => `${p.emoji || ''} ${p.es}`;
+
+        // ---------- inicio ----------
+        function dibujarInicio() {
+            $('chips').innerHTML = [['todas', '🌎 Todas']].concat(Object.entries(VOCAB_ALL).map(([k, c]) => [k, c.icon + ' ' + c.titulo]))
+                .map(([k, t]) => `<button class="chip ${k === cat ? 'sel' : ''}" data-c="${k}">${t}</button>`).join('');
+            document.querySelectorAll('.chip').forEach(b => b.onclick = () => { cat = b.dataset.c; dibujarInicio(); });
+            $('listaJuegos').innerHTML = Object.entries(JUEGOS)
+                .map(([k, j]) => `<div class="card juego" data-j="${k}">${j.icon}<b>${j.nombre}</b></div>`).join('');
+            document.querySelectorAll('.juego').forEach(c => c.onclick = () => abrir(c.dataset.j));
+        }
+
+        function pintarEstado() {
+            if (!juego) $('estado').textContent = xpTotal === null ? '⭐ 0 XP' : '⭐ ' + xpTotal + ' XP';
+            else $('estado').textContent = JUEGOS[juego].vidas ? '❤️ ' + vidas : '⭐ ' + pts;
+        }
+
+        function inicio() {
+            juego = '';
+            if (window.speechSynthesis) speechSynthesis.cancel();
+            $('game').classList.add('hidden'); $('barra').classList.add('hidden');
+            $('home').classList.remove('hidden');
+            $('fill').style.width = '0%';
+            dibujarInicio(); pintarEstado();
+        }
+
+        $('atras').onclick = () => { if (juego) inicio(); else location.href = 'inicio.html'; };
+        $('skip').onclick = inicio;
+
+        // ---------- ciclo de un juego ----------
+        function abrir(j) {
+            juego = j; ronda = 0; pts = 0; vidas = 5; RONDAS = JUEGOS[j].rondas; cola = pool(4);
+            $('home').classList.add('hidden'); $('game').classList.remove('hidden'); $('barra').classList.remove('hidden');
+            $('titulo').classList.remove('hidden'); $('titulo').textContent = JUEGOS[j].icon + ' ' + JUEGOS[j].nombre;
+            siguiente();
+        }
+
+        function siguiente() {
+            if (ronda >= RONDAS) return fin(false);
+            ocupado = false;
+            $('fill').style.width = (ronda / RONDAS * 100) + '%';
+            $('msg').textContent = ''; $('zona').className = '';
+            $('check').classList.add('hidden'); $('check').disabled = false;
+            pintarEstado();
+            JUEGOS[juego].init();
+        }
+
+        function acertar(puntos, texto) {
+            ocupado = true; pts += puntos; ronda++; pintarEstado();
+            celebrate(); if (texto) feedback(texto, true);
+            setTimeout(siguiente, 1300);
+        }
+
+        function fallar(texto) {
+            ocupado = true; ronda++;
+            if (JUEGOS[juego].vidas) vidas--;
+            pintarEstado(); feedback(texto, false);
+            setTimeout(() => vidas <= 0 ? fin(true) : siguiente(), 1300);
+        }
+
+        function fin(sinVidas) {
+            ocupado = true;
+            $('fill').style.width = '100%';
+            $('barra').classList.add('hidden'); $('titulo').classList.add('hidden'); $('msg').textContent = '';
+            $('zona').className = '';
+            $('zona').innerHTML = `<div class="cele-finale">${mascotHTML()}
+                <h1>${sinVidas ? 'Se acabaron las vidas 💔' : '¡Juego completado! 🎉'}</h1>
+                <p>⭐ ${pts} puntos</p>
+                <p id="guardado" style="font-size:16px">${pts > 0 ? 'Guardando tu progreso…' : ''}</p>
+                <button class="cele-restart" id="otra">JUGAR DE NUEVO</button>
+                <button class="cele-restart sec" id="otros">OTROS JUEGOS</button></div>`;
+            const j = juego;
+            $('otra').onclick = () => abrir(j);
+            $('otros').onclick = inicio;
+            if (!sinVidas) confettiFinal();
+            if (pts > 0) guardarProgreso('juego_' + j, pts, 'juego').then(d => {
+                if (d.exito) { xpTotal = d.progreso.experiencia; }
+                const g = $('guardado');
+                if (g) g.innerHTML = textoGuardado(d, d.xp ?? pts) + (d.status === 401 ? ' · <a href="index.html">Entrar</a>' : '');
+            });
+        }
+
+        // ================= JUEGOS =================
+
+        // 1) Memorama: une la palabra en otomí con su significado
+        function memorama() {
+            const base = pool(4).slice(0, 4), z = $('zona');
+            const cartas = shuffle(base.flatMap((b, i) => [{ i, k: 'o' }, { i, k: 'e' }]));
+            $('msg').textContent = 'Encuentra las parejas: palabra en otomí + su significado';
+            z.className = 'grid g4';
+            z.innerHTML = cartas.map((c, n) => `<div class="card cartaM oculta" data-n="${n}">?</div>`).join('');
+            let abiertas = [], pares = 0;
+            z.querySelectorAll('.cartaM').forEach(el => el.onclick = () => {
+                if (ocupado || !el.classList.contains('oculta')) return;
+                const c = cartas[el.dataset.n];
+                el.classList.remove('oculta');
+                el.textContent = c.k === 'o' ? base[c.i].ot[0] : cara(base[c.i]);
+                if (c.k === 'o') reproducir(base[c.i]);
+                abiertas.push(el);
+                if (abiertas.length < 2) return;
+                ocupado = true;
+                const [a, b] = abiertas, ca = cartas[a.dataset.n], cb = cartas[b.dataset.n];
+                setTimeout(() => {
+                    if (ca.i === cb.i && ca.k !== cb.k) {
+                        a.classList.add('ok'); b.classList.add('ok'); pts += 5; pintarEstado();
+                        if (++pares === 4) { acertar(10, '¡Todas las parejas!'); abiertas = []; return; }
+                    } else {
+                        [a, b].forEach(x => { x.classList.add('oculta'); x.textContent = '?'; });
+                    }
+                    abiertas = []; ocupado = false;
+                }, 800);
+            });
+        }
+
+        // 2) Sopa de letras (palabras en horizontal o vertical)
+        function sopa() {
+            const N = 8, z = $('zona');
+            const candidatas = lista => lista.map(p => ({ p, L: letras(p.ot[0]) })).filter(x => x.L.length >= 3 && x.L.length <= N);
+            let c = candidatas(pool(1));
+            if (c.length < 3) c = candidatas(shuffle(todasLasPalabras()));
+            const vistos = new Set();
+            const pal = shuffle(c).filter(x => !vistos.has(x.L) && vistos.add(x.L)).slice(0, 3);
+            const g = Array(N * N).fill('');
+            pal.forEach(w => {
+                for (let intento = 0; intento < 80; intento++) {
+                    const v = Math.random() < .5;
+                    const f = Math.floor(Math.random() * (v ? N - w.L.length + 1 : N));
+                    const col = Math.floor(Math.random() * (v ? N : N - w.L.length + 1));
+                    const celdas = [...w.L].map((_, k) => v ? (f + k) * N + col : f * N + col + k);
+                    if (celdas.every((ix, k) => g[ix] === '' || g[ix] === w.L[k])) { celdas.forEach((ix, k) => g[ix] = w.L[k]); w.cel = celdas; break; }
+                }
+            });
+            const buenas = pal.filter(w => w.cel);
+            for (let i = 0; i < g.length; i++) if (!g[i]) g[i] = String.fromCharCode(65 + Math.random() * 26 | 0);
+            z.className = 'grid g8';
+            z.innerHTML = g.map((l, i) => `<div class="card celda" data-i="${i}">${l}</div>`).join('');
+            const celdasEl = [...z.querySelectorAll('.celda')];
+            const pintarLista = () => $('msg').innerHTML = 'Busca: ' + buenas.map(w =>
+                `<span style="${w.ok ? 'text-decoration:line-through;color:#89e219' : ''}">${esc(w.p.ot[0])} (${esc(w.p.es)})</span>`).join(' · ');
+            pintarLista();
+            celdasEl.forEach(el => el.onclick = () => {
+                if (ocupado) return;
+                el.classList.toggle('s');
+                buenas.forEach(w => {
+                    if (w.ok || !w.cel.every(i => celdasEl[i].classList.contains('s'))) return;
+                    w.ok = true; w.cel.forEach(i => { celdasEl[i].classList.remove('s'); celdasEl[i].classList.add('f'); });
+                    reproducir(w.p); pts += 5; pintarEstado(); pintarLista();
+                });
+                if (buenas.every(w => w.ok)) acertar(10, '¡Encontraste todas!');
+            });
+        }
+
+        // 3) Ahorcado
+        function ahorcado() {
+            let c = pool(1).filter(p => { const L = letras(p.ot[0]); return L.length >= 3 && L.length <= 10; });
+            if (!c.length) c = shuffle(todasLasPalabras()).filter(p => { const L = letras(p.ot[0]); return L.length >= 3 && L.length <= 10; });
+            const p = c[0], L = letras(p.ot[0]), MAX = 6, acertadas = new Set();
+            let fallos = 0;
+            const z = $('zona');
+            z.innerHTML = `<div class="emoji-grande">${p.emoji || '❓'}</div>
+                <p class="centro" style="font-weight:800;font-size:20px">${esc(p.es)}</p>
+                <div class="palabra" id="pal"></div>
+                <p class="centro" id="vi" style="font-size:22px"></p>
+                <div class="teclado" id="tec"></div>`;
+            const pintar = () => {
+                $('pal').textContent = [...L].map(l => acertadas.has(l) ? l : '_').join(' ');
+                $('vi').textContent = '❤️'.repeat(MAX - fallos) + '🖤'.repeat(fallos);
+            };
+            pintar();
+            $('tec').innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l => `<button class="tecla">${l}</button>`).join('');
+            $('tec').querySelectorAll('.tecla').forEach(b => b.onclick = () => {
+                if (ocupado) return;
+                b.disabled = true; const l = b.textContent;
+                if (L.includes(l)) { acertadas.add(l); b.classList.add('bien'); }
+                else { fallos++; b.classList.add('mala'); }
+                pintar();
+                if ([...L].every(x => acertadas.has(x))) { reproducir(p); acertar(10, '¡Ganaste! Es ' + p.ot[0]); }
+                else if (fallos >= MAX) fallar('Era: ' + p.ot[0]);
+            });
+        }
+
+        // 4) Une las parejas: arrastra cada color hasta su nombre en otomí (5 niveles: 3, 5, 7, 10 y 12 colores)
+        const COLORES_UNE = [
+            ['Morado', 'kjuföi', '#8052a6'],
+            ['Verde', 'Paxi', '#329447'],
+            ['Cafe', 'boxo', '#7b4a2b'],
+            ['Blanco', "t'axi", '#ffffff'],
+            ['Gris', 'Gospi', '#a6a6a6'],
+            ['Pinto', 'bindo', '#d2b08c'],
+            ['Amarillo', "k'axti", '#f5d21c'],
+            ['Azul', "k'angi", '#2e70d1'],
+            ['Rosa', 'roxa', '#ef8db2'],
+            ['Naranja', 'naranxa', '#f29a12'],
+            ['Negro', "bot'i", '#222222'],
+            ['Rojo', 'Theni', '#d82e35']
+        ];
+        const NIVELES_UNE = [3, 5, 7, 10, 12];
+
+        function une() {
+            const lista = COLORES_UNE.slice(0, NIVELES_UNE[ronda] || 12);
+            const mitad = Math.ceil(lista.length / 2);
+            let aciertos = 0, elegido = null;
+
+            $('zona').innerHTML = `<p class="centro nivel-une">Nivel ${ronda + 1} de ${NIVELES_UNE.length}</p>
+                <div class="une-tablero">
+                    <div class="une-lado" id="uizq"></div>
+                    <div class="une-centro" id="ucol"></div>
+                    <div class="une-lado" id="uder"></div>
+                </div>`;
+            $('msg').textContent = 'Arrastra cada color a su nombre (o toca el color y luego el nombre)';
+
+            // Círculos de colores (al centro)
+            shuffle(lista).forEach(c => {
+                const b = document.createElement('button');
+                b.className = 'ucolor';
+                b.dataset.n = c[0];
+                b.style.background = c[2];
+                b.setAttribute('aria-label', c[0]);
+                b.draggable = true;
+                b.ondragstart = e => { e.dataTransfer.setData('color', c[0]); elegir(b); };
+                b.onclick = () => elegir(b);
+                $('ucol').appendChild(b);
+            });
+
+            function elegir(b) {
+                if (ocupado || b.disabled) return;
+                document.querySelectorAll('.ucolor').forEach(x => x.classList.remove('sel'));
+                b.classList.add('sel'); elegido = b.dataset.n;
+            }
+
+            // Nombres en otomí (a los lados)
+            shuffle(lista).forEach((c, i) => {
+                const casilla = document.createElement('span');
+                casilla.className = 'ucasilla';
+                const w = document.createElement('button');
+                w.className = 'upal';
+                w.appendChild(casilla);
+                w.appendChild(document.createTextNode(c[1]));
+                w.ondragover = e => e.preventDefault();
+                w.ondrop = e => { e.preventDefault(); soltar(e.dataTransfer.getData('color'), w, casilla, c); };
+                w.onclick = () => { if (elegido) soltar(elegido, w, casilla, c); else $('msg').textContent = 'Primero elige un color'; };
+                $(i < mitad ? 'uizq' : 'uder').appendChild(w);
+            });
+
+            function soltar(nombre, w, casilla, c) {
+                if (ocupado || w.disabled) return;
+                if (nombre !== c[0]) {
+                    w.classList.add('mal'); setTimeout(() => w.classList.remove('mal'), 500);
+                    $('msg').textContent = 'Intenta otra vez.';
+                    return;
+                }
+                casilla.style.background = c[2];
+                w.disabled = true; w.classList.add('ok');
+                const col = document.querySelector('.ucolor[data-n="' + c[0] + '"]');
+                col.disabled = true; col.classList.remove('sel'); elegido = null;
+                pts += 5; pintarEstado();
+                if (++aciertos === lista.length) acertar(10, '¡Nivel completado!');
+                else $('msg').textContent = '¡Correcto!';
+            }
+        }
+
+        // 5) Audio: escucha y elige el significado
+        function audio() {
+            const p = cola[ronda % cola.length];
+            const otras = shuffle(todasLasPalabras().filter(x => x.es !== p.es && x.ot[0] !== p.ot[0])).slice(0, 2);
+            const ops = shuffle([p, ...otras]);
+            $('zona').innerHTML = `<h1>Escucha y elige</h1>
+                <button class="audio-btn grande" id="oir">🔊 Escuchar</button>
+                <div id="ops"></div>`;
+            $('ops').innerHTML = ops.map((o, i) => `<div class="card" data-i="${i}">${esc(cara(o))}</div>`).join('');
+            $('oir').onclick = () => reproducir(p);
+            setTimeout(() => reproducir(p), 300);
+            $('ops').querySelectorAll('.card').forEach(el => el.onclick = () => {
+                if (ocupado) return;
+                if (ops[el.dataset.i] === p) { el.classList.add('ok'); acertar(10, '¡Correcto! ' + p.ot[0]); }
+                else { el.classList.add('mal'); fallar('Era: ' + p.es + ' (' + p.ot[0] + ')'); }
+            });
+        }
+
+        // 6) Escribe: escribe la palabra en otomí
+        function escribe() {
+            const p = cola[ronda % cola.length];
+            $('zona').innerHTML = `<h1>¿Cómo se escribe en otomí?</h1>
+                <div class="emoji-grande">${p.emoji || ''}</div>
+                <p class="centro" style="font-weight:800;font-size:22px;margin-bottom:14px">${esc(p.es)} <button class="audio-btn" id="oir" style="margin:0 0 0 8px;padding:6px 10px">🔊</button></p>
+                <input class="texto" id="resp" placeholder="Escribe en otomí…" autocomplete="off" autocapitalize="off" spellcheck="false">`;
+            $('check').classList.remove('hidden');
+            $('oir').onclick = () => reproducir(p);
+            const comprobar = () => {
+                if (ocupado) return;
+                const v = $('resp').value;
+                if (!norm(v)) { $('msg').textContent = 'Escribe algo primero'; return; }
+                $('check').disabled = true;
+                if (p.ot.some(o => norm(o) === norm(v))) { reproducir(p); acertar(10, '¡Bien! Es ' + p.ot[0]); }
+                else fallar('Era: ' + p.ot[0]);
+            };
+            $('check').onclick = comprobar;
+            $('resp').onkeydown = e => { if (e.key === 'Enter') comprobar(); };
+            $('resp').focus();
+        }
+
+        // ---------- arranque ----------
+        dibujarInicio();
+        obtenerSesion().then(d => { if (d.exito) { xpTotal = d.progreso.experiencia; pintarEstado(); } });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Otomí - Aprender</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+
+<body class="con-menu">
+    <!-- Menú lateral (igual al de inicio.html) -->
+    <nav class="sidebar1">
+        <div class="logo"><a href="inicio.html"><img src="../img/logo.png" alt="Inicio"></a></div>
+        <ul class="menu-links1">
+            <li><a href="Vocales.html">Vocales</a></li>
+            <li><a href="cons.html">Consonantes</a></li>
+            <li><a href="men_lecc.html" class="actual">Aprender</a></li>
+            <li><a href="Perfil.html">Perfil</a></li>
+            <li><a href="juegos.html">Juegos</a></li>
+            <li><a href="../api/logout.php">Cerrar Sesion</a></li>
+        </ul>
+    </nav>
+
+    <div class="home">
+        <div class="unit">
+            <div>
+                <small>UNIDAD 1</small>
+                <h1>Primeros pasos en hñähñu</h1>
+            </div>
+            <!-- Cambia el href por la página a la que quieres regresar -->
+            <a class="home-btn" href="inicio.html">← INICIO</a>
+        </div>
+
+        <div class="hero">
+            <div class="axo-wrap">
+                <img class="axo" src="../img/logo.png" alt="Ajolote">
+                <span class="bub"></span><span class="bub"></span><span class="bub"></span>
+            </div>
+            <div class="speech" id="speech">¡Hola! ¿Qué aprendemos hoy?</div>
+        </div>
+
+        <div class="path" id="path"></div>
+        <button class="reset" id="reset">Reiniciar progreso</button>
+    </div>
+
+    <script>
+        // ===== LECCIONES =====
+        // href: archivo de la lección. Sin href = bloqueada ("próximamente").
+        // Para agregar una lección nueva, añade un objeto aquí con su id y href.
+        const LECCIONES = [
+            { id: 'vocales', t: 'Vocales', icon: '🅰️', href: 'Vocales.html' },
+            { id: 'alfabeto', t: 'Consonantes', icon: '🔤', href: 'cons.html' },
+            { id: 'colores', t: 'Colores', icon: '🎨', href: 'colores.html' },
+            { id: 'frutas', t: 'Frutas', icon: '🍊', href: 'frutas.html' },
+            { id: 'numeros', t: 'Números', icon: '🔢', href: 'numeros.html' },
+            { id: 'saludos', t: 'Saludos', icon: '👋', href: 'saludos.html' },
+            { id: 'familia', t: 'Familia', icon: '👪', href: 'familia.html' },
+            { id: 'animales', t: 'Animales', icon: '🦎', href: 'animales.html' },
+        ];
+        const OFFSETS = [0, 50, 80, 50, 0, -50, -80, -50]; // zigzag horizontal (px)
+        const FRASES = ['¡Hola! ¿Qué aprendemos hoy?', '¡Vamos a nadar en otomí! 💧', 'Poco a poco se aprende.', '¡Tú puedes!'];
+
+        // Progreso guardado en el navegador (las lecciones lo marcan al terminar)
+        function leerHechas() {
+            try { return JSON.parse(localStorage.getItem('otomi_done') || '[]'); } catch (e) { return []; }
+        }
+
+        function toast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 1600);
+        }
+
+        function dibujar() {
+            const hechas = leerHechas();
+            const actual = LECCIONES.find(l => l.href && !hechas.includes(l.id));
+            const path = document.getElementById('path');
+            path.innerHTML = '';
+
+            LECCIONES.forEach((l, i) => {
+                const esc = Math.min(1, (Math.min(window.innerWidth, 600) - 32) / 420);   // en pantallas angostas el zigzag se reduce
+                const off = Math.round(OFFSETS[i % OFFSETS.length] * esc);
+                const done = hechas.includes(l.id);
+                const locked = !l.href;
+                const isCur = actual && actual.id === l.id;
+
+                const stop = document.createElement('div');
+                stop.className = 'stop';
+                stop.style.transform = `translateX(${off}px)`;
+
+                if (isCur) {
+                    const s = document.createElement('div');
+                    s.className = 'start';
+                    s.textContent = '¡EMPEZAR!';
+                    stop.appendChild(s);
+                    const m = document.createElement('img');
+                    m.className = 'mini ' + (off >= 0 ? 'left' : 'right');
+                    m.src = '../img/logo.png';
+                    m.alt = 'Ajolote';
+                    stop.appendChild(m);
+                }
+
+                const b = document.createElement('button');
+                b.className = 'node' + (done ? ' done' : '') + (locked ? ' locked' : '') + (isCur ? ' current' : '');
+                b.textContent = locked ? '🔒' : l.icon;
+                b.setAttribute('aria-label', l.t);
+                b.onclick = () => {
+                    if (locked) {
+                        stop.classList.remove('shake'); void stop.offsetWidth; stop.classList.add('shake');
+                        toast('Próximamente: ' + l.t);
+                        return;
+                    }
+                    location.href = l.href;
+                };
+                stop.appendChild(b);
+
+                const lab = document.createElement('div');
+                lab.className = 'label';
+                lab.textContent = l.t;
+                stop.appendChild(lab);
+
+                path.appendChild(stop);
+            });
+        }
+
+        // El ajolote cambia de frase al tocarlo
+        let f = 0;
+        document.querySelector('.axo').onclick = () => {
+            f = (f + 1) % FRASES.length;
+            document.getElementById('speech').textContent = FRASES[f];
+        };
+
+        document.getElementById('reset').onclick = async () => {
+            try { localStorage.removeItem('otomi_done'); } catch (e) { }
+            try { await fetch('../api/reiniciar_progreso.php', { method: 'POST', credentials: 'same-origin' }); } catch (e) { }
+            dibujar();
+        };
+
+        dibujar();
+        let _t; window.addEventListener('resize', () => { clearTimeout(_t); _t = setTimeout(dibujar, 150); });
+
+        // Sincroniza las lecciones terminadas con la base de datos (y pide iniciar sesión si hace falta)
+        (async () => {
+            try {
+                const r = await fetch('../api/sesion.php', { credentials: 'same-origin' });
+                if (r.status === 401) { location.href = 'index.html'; return; }
+                const d = await r.json();
+                if (d.exito) {
+                    const local = leerHechas();
+                    localStorage.setItem('otomi_done', JSON.stringify([...new Set([...local, ...d.completadas])]));
+                    dibujar();
+                }
+            } catch (e) { }
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+    "liveServer.settings.port": 5501,
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#4DBE5738",
+        "titleBar.inactiveBackground": "#4DBE571f",
+        "titleBar.border": "#4DBE57",
+        "statusBar.border": "#4DBE57",
+        "statusBar.foreground": "#4DBE57",
+        "activityBar.activeBorder": "#4DBE57",
+        "focusBorder": "#4DBE5780",
+        "__omnify": "upgrade:subtle"
+    },
+    "omnify.alien": "upgrade"
+}

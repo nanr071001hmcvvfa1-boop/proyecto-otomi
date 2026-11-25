@@ -1,0 +1,438 @@
+:root { color-scheme: dark }
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Nunito', sans-serif
+}
+
+body {
+        background: #16222a;
+        color: #e8eef2
+}
+
+.top {
+        position: sticky;
+        top: 0;
+        background: #16222a;
+        padding: 14px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-bottom: 2px solid #36464f;
+        z-index: 10
+}
+
+/* NUEVO: botón para regresar al menú */
+.menu-btn {
+        background: #16222a;
+        border: 2px solid #36464f;
+        border-bottom: 4px solid #36464f;
+        border-radius: 12px;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 800;
+        color: #a3afb6;
+        cursor: pointer;
+        white-space: nowrap
+}
+
+.menu-btn:active {
+        transform: translateY(2px);
+        border-bottom-width: 2px
+}
+
+.progress {
+        flex: 1;
+        height: 16px;
+        background: #36464f;
+        border-radius: 8px;
+        overflow: hidden
+}
+
+.fill {
+        height: 100%;
+        background: #58cc02;
+        width: 0%;
+        transition: width .5s
+}
+
+.wrap {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px 16px 100px
+}
+
+h1 {
+        font-size: 26px;
+        margin: 12px 0 20px
+}
+
+/* Botón de audio */
+.audio-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #17394a;
+        border: 2px solid #1cb0f6;
+        color: #1cb0f6;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-bottom: 20px
+}
+
+.audio-btn:active {
+        transform: scale(0.97)
+}
+
+.card {
+        border: 2px solid #36464f;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        font-size: 19px;
+        cursor: pointer;
+        text-align: center
+}
+
+.card.sel {
+        background: #17394a;
+        border-color: #1cb0f6;
+        color: #1cb0f6
+}
+
+/* Barra inferior: ahora con dos botones (SALTAR + COMPROBAR) */
+.btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #16222a;
+        padding: 16px;
+        border-top: 2px solid #36464f;
+        display: flex;
+        gap: 10px
+}
+
+/* NUEVO: botón para saltar la pregunta (cuesta una vida) */
+button#skip {
+        flex: 1;
+        background: #16222a;
+        color: #ff4b4b;
+        border: 2px solid #36464f;
+        border-bottom: 4px solid #36464f;
+        padding: 14px 8px;
+        border-radius: 16px;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer
+}
+
+button#skip:active {
+        transform: translateY(2px);
+        border-bottom-width: 2px
+}
+
+button#skip:disabled {
+        color: #bbb;
+        cursor: not-allowed
+}
+
+button#check {
+        flex: 2;
+        background: #58cc02;
+        color: #fff;
+        border: none;
+        border-bottom: 4px solid #58a700;
+        padding: 14px;
+        border-radius: 16px;
+        font-size: 19px;
+        font-weight: 800;
+        cursor: pointer
+}
+
+button#check:disabled {
+        background: #36464f;
+        border-color: #4a5a63;
+        color: #7d8a91;
+        cursor: not-allowed
+}
+
+.feedback {
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        padding: 16px;
+        text-align: center;
+        font-weight: 800;
+        z-index: 20
+}
+
+.good {
+        background: #1e3b14;
+        color: #89e219
+}
+
+.bad {
+        background: #40201f;
+        color: #ff4b4b
+}
+
+/* Persona con globo de texto */
+.scene {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 20px
+}
+
+.person {
+        width: 110px;
+        height: 130px;
+        flex-shrink: 0
+}
+
+.bubble {
+        position: relative;
+        background: #16222a;
+        border: 2px solid #36464f;
+        border-radius: 16px;
+        padding: 14px 20px;
+        font-size: 24px;
+        font-weight: 800;
+        color: #e8eef2;
+        margin-bottom: 60px
+}
+
+.bubble .audio-btn {
+        margin: 0 0 0 12px;
+        padding: 6px 10px;
+        font-size: 20px;
+        vertical-align: middle
+}
+
+.bubble::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        bottom: 16px;
+        width: 16px;
+        height: 16px;
+        background: #16222a;
+        border-left: 2px solid #36464f;
+        border-bottom: 2px solid #36464f;
+        transform: rotate(45deg)
+}
+
+/*Animacion de felicitaciones al acertar en la respuesta y al finalizar la leccion*/
+.cele-box {
+        position: fixed;
+        left: 50%;
+        top: 38%;
+        transform: translate(-50%, -50%);
+        z-index: 30;
+        pointer-events: none;
+        text-align: center;
+        animation: celePop 1.2s ease forwards
+}
+
+.cele-mascot {
+        display: inline-block;
+        animation: celeJump .6s ease-in-out infinite alternate;
+        filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .2))
+}
+
+.cele-mascot img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto
+}
+
+.cele-bubble {
+        background: #16222a;
+        border: 3px solid #58cc02;
+        color: #89e219;
+        border-radius: 18px;
+        padding: 10px 20px;
+        font-size: 22px;
+        font-weight: 800;
+        margin-top: 8px;
+        box-shadow: 0 4px 0 #58a700;
+        white-space: nowrap
+}
+
+@keyframes celePop {
+        0% {
+                opacity: 0;
+                transform: translate(-50%, -30%) scale(.3)
+        }
+
+        20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1)
+        }
+
+        30% {
+                transform: translate(-50%, -50%) scale(1)
+        }
+
+        80% {
+                opacity: 1
+        }
+
+        100% {
+                opacity: 0;
+                transform: translate(-50%, -70%) scale(1)
+        }
+}
+
+@keyframes celeJump {
+        0% {
+                transform: translateY(0) rotate(-10deg)
+        }
+
+        100% {
+                transform: translateY(-22px) rotate(10deg)
+        }
+}
+
+.cele-confetti {
+        position: fixed;
+        top: -20px;
+        width: 10px;
+        height: 14px;
+        z-index: 25;
+        pointer-events: none;
+        animation: celeFall linear forwards
+}
+
+@keyframes celeFall {
+        to {
+                transform: translateY(110vh) rotate(720deg)
+        }
+}
+
+.cele-finale {
+        text-align: center;
+        padding-top: 10px
+}
+
+.cele-finale .cele-mascot {
+        animation: celeDance 1s ease-in-out infinite
+}
+
+.cele-finale .cele-mascot img {
+        width: 220px;
+        height: 220px
+}
+
+.cele-finale p {
+        font-size: 20px;
+        color: #a3afb6;
+        margin: 8px 0 24px;
+        font-weight: 800
+}
+
+.cele-finale h1 {
+        color: #89e219;
+        animation: celePulse 1.4s ease-in-out infinite
+}
+
+.cele-restart {
+        background: #1cb0f6;
+        color: #fff;
+        border: none;
+        border-bottom: 4px solid #1899d6;
+        padding: 14px 28px;
+        border-radius: 16px;
+        font-size: 19px;
+        font-weight: 800;
+        cursor: pointer;
+        margin: 4px
+}
+
+.cele-restart.sec {
+        background: #16222a;
+        color: #1cb0f6;
+        border: 2px solid #36464f;
+        border-bottom: 4px solid #36464f
+}
+
+@keyframes celeDance {
+
+        0%,
+        100% {
+                transform: translateY(0) rotate(-12deg) scale(1)
+        }
+
+        25% {
+                transform: translateY(-30px) rotate(0) scale(1.1)
+        }
+
+        50% {
+                transform: translateY(0) rotate(12deg) scale(1)
+        }
+
+        75% {
+                transform: translateY(-30px) rotate(0) scale(1.1)
+        }
+}
+
+@keyframes celePulse {
+
+        0%,
+        100% {
+                transform: scale(1)
+        }
+
+        50% {
+                transform: scale(1.06)
+        }
+}
+
+@media (prefers-reduced-motion:reduce) {
+
+        .cele-mascot,
+        .cele-finale h1,
+        .cele-confetti {
+                animation: none !important
+        }
+}
+
+/* =========================================================
+   RESPONSIVE: celular, tableta y escritorio
+   ========================================================= */
+:root { --ancho: 600px }
+@media (min-width: 900px) { :root { --ancho: 680px } }
+html { -webkit-text-size-adjust: 100% }
+img, svg { max-width: 100% }
+.wrap { max-width: var(--ancho) }
+/* Las barras fijas centran su contenido al mismo ancho que la página */
+.top { padding-inline: max(14px, calc((100% - var(--ancho)) / 2)) }
+.btn { padding-inline: max(16px, calc((100% - var(--ancho)) / 2)); padding-bottom: max(16px, env(safe-area-inset-bottom)) }
+.feedback { padding-inline: max(16px, calc((100% - var(--ancho)) / 2)) }
+.back-btn { display: block; max-width: var(--ancho); margin: 12px auto 0; padding: 0 16px; color: #1cb0f6; font-weight: 800; font-size: 14px; text-decoration: none }
+
+@media (max-width: 420px) {
+    h1 { font-size: 22px }
+    .wrap { padding: 16px 12px 100px }
+    .person { width: 84px; height: 100px }
+    .bubble { font-size: 19px; padding: 10px 14px; margin-bottom: 40px }
+    .card { font-size: 17px; padding: 14px }
+    button#skip { font-size: 13px; padding: 12px 6px }
+    button#check { font-size: 17px }
+    .cele-finale .cele-mascot img { width: 170px; height: 170px }
+    .cele-bubble { white-space: normal; font-size: 19px }
+}
+
+/* Celular acostado: poco alto disponible */
+@media (max-height: 520px) and (orientation: landscape) {
+    .person { display: none }
+    .bubble { margin-bottom: 20px }
+    .wrap { padding-bottom: 90px }
+}

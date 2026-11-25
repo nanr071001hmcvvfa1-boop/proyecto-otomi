@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendiendo...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estil.css">
+    <style>
+        body { padding-top: 70px; }
+        /* Barra superior: igual que .top de las lecciones */
+        #hud {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px max(14px, calc((100% - 720px) / 2)); background: #16222a; border-bottom: 2px solid #36464f;
+        }
+        #barra-fondo { flex: 1; height: 16px; background: #36464f; border-radius: 8px; overflow: hidden; }
+        #barra-relleno { height: 100%; width: 0; background: #58cc02; border-radius: 8px; transition: width .5s; }
+        #xp { font-weight: 800; color: #ff9600; white-space: nowrap; }
+        #vidas { font-size: 1rem; font-weight: 800; color: #ff4b4b; white-space: nowrap; }
+        #volver {
+            background: #16222a; color: #a3afb6; text-decoration: none; font-weight: 800; font-size: 14px;
+            white-space: nowrap; border: 2px solid #36464f; border-bottom: 4px solid #36464f;
+            border-radius: 12px; padding: 6px 12px;
+        }
+        /* Aviso de bien / mal */
+        #aviso {
+            position: fixed; bottom: 90px; left: 0; right: 0; z-index: 100;
+            padding: 16px; text-align: center; font-weight: 800; display: none;
+        }
+        #aviso.bien { background: #1e3b14; color: #89e219; display: block; }
+        #aviso.mal { background: #40201f; color: #ff4b4b; display: block; }
+        #aviso.info { background: #17394a; color: #1cb0f6; display: block; }
+        /* Pantallas finales */
+        #fin-vidas, #fin-ok {
+            position: fixed; inset: 0; z-index: 200; display: none;
+            align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+            background: #16222a; color: #e8eef2; text-align: center; padding: 20px;
+        }
+        #fin-vidas h2, #fin-ok h2 { font-size: 28px; margin: 0; }
+        #fin-ok h2 { color: #89e219; }
+        #fin-vidas p, #fin-ok p { color: #a3afb6; font-weight: 800; margin: 0; }
+        #fin-vidas button, #fin-ok button {
+            min-width: 260px; padding: 14px 28px; border: none; border-bottom: 4px solid #1899d6;
+            border-radius: 16px; font-size: 19px; font-weight: 800; background: #1cb0f6; color: #fff;
+        }
+        #fin-vidas button[style], #fin-ok button[style] {
+            background: #16222a !important; color: #1cb0f6; border: 2px solid #36464f; border-bottom: 4px solid #36464f;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR: progreso, experiencia y vidas -->
+    <div id="hud">
+        <a id="volver" href="men_lecc.html" aria-label="Volver al menú">🏠 MENÚ</a>
+        <div id="barra-fondo"><div id="barra-relleno"></div></div>
+        <div id="xp">⚡ <span id="xp-valor">0</span> XP</div>
+        <div id="vidas"></div>
+    </div>
+    <div id="aviso"></div>
+    <div id="fin-vidas">
+        <h2>😢 Te quedaste sin vidas</h2>
+        <p>¡No te rindas! Vuelve a intentarlo.</p>
+        <button onclick="location.reload()">REINTENTAR</button>
+        <button onclick="location.href='men_lecc.html'" style="background:#16222a">VOLVER AL MENÚ</button>
+    </div>
+    <div id="fin-ok">
+        <h2>🎉 ¡Felicidades!</h2>
+        <p id="guardado">Guardando tu progreso…</p>
+        <button onclick="location.href='men_lecc.html'">VOLVER AL MENÚ</button>
+        <button onclick="location.href='Perfil.html'" style="background:#16222a">VER MI PERFIL</button>
+    </div>
+
+
+    <!-- LECCIÓN 1 -->
+    <section id="leccion1">
+
+
+        <h3>Nueva palabra</h3>
+        <h1>¿Cuál de estos es Rosa?</h1>
+
+
+        <div class="container">
+            <!-- Correcta -->
+            <div class="card" onclick="reproducirAudio2()">
+                <img src="../img/cerdo.webp">
+                <h3>Roxa</h3>
+
+            </div>
+            <div class="card" onclick="reproducirAudio1()">
+                <img src="../img/naranja.jpg" alt="naranja">
+                <div class="contenido">
+                    <h3>Naraxa</h3>
+                </div>
+
+            </div>
+
+
+
+
+            <div class="card" onclick="reproducirAudio3()">
+                <img src="../img/cafe.webp">
+                <div class="contenido"></div>
+                <h3>Boxo</h3>
+            </div>
+        </div>
+
+
+        <div class="botones">
+            <button class="comprobar" onclick="comprobar()">
+                COMPROBAR
+            </button>
+            <button class="saltar" onclick="saltar()">
+                SALTAR
+            </button>
+        </div>
+
+
+
+
+
+    </section>
+
+
+    <!-- LECCIÓN 2 -->
+
+
+    <section id="leccion2">
+
+
+        <h3>Nueva palabra</h3>
+        <h1>¿Cuál de estos es el Cafe?</h1>
+
+
+        <div class="container">
+
+
+
+            <div class="card" onclick="reproducirAudio1()">
+                <img src="../img/naranja.jpg">
+                <h3>Naraxa</h3>
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio3()">
+                <img src="../img/cafe.webp">
+                <h3>Boxo</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio2()">
+                <img src="../img/verde.jpg">
+                <h3>k'apaxi/</h3>
+            </div>
+
+
+        </div>
+
+
+        <div class="botones">
+            <button class="comprobar" onclick="comprobar()">
+                COMPROBAR
+            </button>
+
+
+            <button class="saltar" onclick="saltar()">
+                SALTAR
+            </button>
+        </div>
+
+
+        <p id="resultado2" class="resultado"></p>
+
+
+    </section>
+    <!-- LECCIÓN 3 -->
+
+    <section id="leccion3">
+
+
+        <h3>Nueva palabra</h3>
+        <h1>¿Cuál de estos es la naranja?</h1>
+
+
+        <div class="container">
+
+
+
+            <div class="card" onclick="reproducirAudio1()">
+                <img src="../img/naranja.jpg">
+                <h3>Naraxa</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio3()">
+                <img src="../img/cafe.webp">
+                <h3>Boxo</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio2()">
+                <img src="../img/te.jpg">
+                <h3>uthe</h3>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="botones">
+            <button class="comprobar" onclick="comprobar()">
+                COMPROBAR
+            </button>
+
+
+            <button class="saltar" onclick="saltar()">
+                SALTAR
+            </button>
+        </div>
+
+
+        <p id="resultado2" class="resultado"></p>
+
+
+    </section>
+    <!-- LECCIÓN 4 -->
+
+
+    <section id="leccion4">
+
+
+        <h3>Traducir palabra</h3>
+        <h1>Escribe boxo en español</h1>
+
+
+        <div class="container">
+
+
+
+            <div class="card" onclick="reproducirAudio1()">
+                <h3 style="background-color: orange;">Naranja</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio3()">
+                <h3 style="background-color: brown;">Cafe</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio2()">
+                <h3 style="background-color: pink;">Rosa</h3>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="botones">
+            <button class="comprobar" onclick="comprobar()">
+                COMPROBAR
+            </button>
+
+
+            <button class="saltar" onclick="saltar()">
+                SALTAR
+            </button>
+        </div>
+
+
+        <p id="resultado2" class="resultado"></p>
+
+
+    </section>
+
+    <!-- LECCIÓN 5 -->
+
+
+    <section id="leccion5">
+
+
+        <h3>Traducir palabra</h3>
+        <h1>Cual es rosa en otomi</h1>
+
+
+        <div class="container">
+
+
+
+            <div class="card" onclick="reproducirAudio1()">
+                <h3>Naranxa</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio3()">
+                <h3>Boxo</h3>
+
+
+            </div>
+
+
+            <div class="card" onclick="reproducirAudio2()">
+                <h3>Roxa</h3>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="botones">
+            <button class="comprobar" onclick="comprobar()">
+                COMPROBAR
+            </button>
+
+
+            <button class="saltar" onclick="saltar()">
+                SALTAR
+            </button>
+        </div>
+
+
+        <p id="resultado2" class="resultado"></p>
+
+
+    </section>
+
+    <!-- LECCIÓN 6 o pantalla de fianlizacion -->
+
+
+    <section id="leccion6">
+        <div>
+            <h2 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">FELICIDADES POR
+                FINALIZAR ESTAS 5 LECCIONES</h2>
+        </div>
+    </section>
+
+    <audio id="audio1" src="audio/naranxa.ogg"></audio>
+    <audio id="audio2" src="audio/Roxa.ogg"></audio>
+    <audio id="audio3" src="audio/boxo.ogg"></audio>
+    <script src="progreso.js"></script>
+    <script>
+        function reproducirAudio1() {
+            const audio = document.getElementById("audio1");
+            audio.currentTime = 0;
+            audio.play();
+        }
+        function reproducirAudio2() {
+            const audio = document.getElementById("audio2");
+            audio.currentTime = 0;
+            audio.play();
+        }
+        function reproducirAudio3() {
+            const audio = document.getElementById("audio3");
+            audio.currentTime = 0;
+            audio.play();
+        }
+        function mostrarleccion2() {
+            document.getElementById("leccion1").style.display = "none";
+            document.getElementById("leccion2").style.display = "block";
+        }
+        function mostrarleccion3() {
+            document.getElementById("leccion2").style.display = "none";
+            document.getElementById("leccion3").style.display = "block";
+        }
+        function mostrarleccion4() {
+            document.getElementById("leccion3").style.display = "none";
+            document.getElementById("leccion4").style.display = "block";
+        }
+        function mostrarleccion5() {
+            document.getElementById("leccion4").style.display = "none";
+            document.getElementById("leccion5").style.display = "block";
+        }
+        function mostrarleccion6() {
+            document.getElementById("leccion5").style.display = "none";
+            document.getElementById("leccion6").style.display = "block";
+        }
+
+        // ---------- Estado del juego ----------
+        const TOTAL = 5;                      // número de lecciones
+        const VIDAS_INICIALES = 3;
+        const XP_POR_ACIERTO = 10;
+        const CORRECTAS = [0, 1, 0, 1, 2];    // posición de la tarjeta correcta en cada lección (0 = primera)
+        const avanzar = [mostrarleccion2, mostrarleccion3, mostrarleccion4, mostrarleccion5, mostrarFinal];
+
+        let puntaje = 0;                      // experiencia ganada (la usa mostrarFinal)
+        let vidas = VIDAS_INICIALES;
+        let actual = 0;                       // índice de la lección actual (0-4)
+        let seleccion = null;
+        let enviando = false;
+
+        function pintarHud() {
+            document.getElementById("xp-valor").textContent = puntaje;
+            document.getElementById("barra-relleno").style.width = (actual / TOTAL * 100) + "%";
+            document.getElementById("vidas").textContent =
+                "❤️".repeat(vidas) + "🖤".repeat(VIDAS_INICIALES - vidas);
+        }
+
+        function aviso(texto, tipo) {
+            const a = document.getElementById("aviso");
+            a.textContent = texto;
+            a.className = tipo;
+            clearTimeout(aviso.t);
+            aviso.t = setTimeout(() => { a.className = ""; }, 1800);
+        }
+
+        function tarjetas() {
+            return document.querySelectorAll("#leccion" + (actual + 1) + " .card");
+        }
+
+        // Al tocar una tarjeta se marca como respuesta (el audio sigue sonando)
+        document.querySelectorAll(".card").forEach(card => {
+            card.addEventListener("click", () => {
+                document.querySelectorAll(".card.seleccionada").forEach(c => c.classList.remove("seleccionada"));
+                card.classList.add("seleccionada");
+                seleccion = Array.from(tarjetas()).indexOf(card);
+            });
+        });
+
+        function siguiente() {
+            seleccion = null;
+            document.querySelectorAll(".card.seleccionada").forEach(c => c.classList.remove("seleccionada"));
+            const f = avanzar[actual];
+            actual++;
+            pintarHud();
+            f();
+        }
+
+        function comprobar() {
+            if (enviando) return;
+            if (seleccion === null || seleccion < 0) {
+                aviso("Elige una respuesta primero", "info");
+                return;
+            }
+            if (seleccion === CORRECTAS[actual]) {
+                puntaje += XP_POR_ACIERTO;
+                aviso("¡Correcto! +" + XP_POR_ACIERTO + " XP", "bien");
+            } else {
+                vidas--;
+                aviso("Incorrecto. Pierdes una vida", "mal");
+                pintarHud();
+                if (vidas === 0) {
+                    document.getElementById("fin-vidas").style.display = "flex";
+                    return;
+                }
+            }
+            siguiente();
+        }
+
+        function saltar() {
+            if (enviando) return;
+            aviso("Lección saltada", "info");
+            siguiente();
+        }
+
+        // ---------- Guardar progreso en la base de datos ----------
+        function mostrarFinal() {
+            enviando = true;
+            document.getElementById("fin-ok").style.display = "flex";
+            guardarYMostrar("colores", puntaje);   // suma el XP en la base de datos y lo muestra
+        }
+
+        // ---------- Inicio: solo la lección 1 visible ----------
+        for (let i = 2; i <= 6; i++) {
+            document.getElementById("leccion" + i).style.display = "none";
+        }
+        document.getElementById("leccion1").style.display = "block";
+        pintarHud();
+
+    </script>
+
+
+</body>
+
+</html>
